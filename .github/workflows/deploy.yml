@@ -1,6 +1,5 @@
 name: Deploy
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -8,9 +7,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-
-env:
-  SCRIPT_ID: ${{ secrets.SCRIPT_ID }}
 
 jobs:
   deploy:
@@ -20,10 +16,6 @@ jobs:
 
       - name: npm install
         run: npm install
-
-      - name: create .clasp.json
-        run: |
-          echo "{\"scriptId\":\"${{ env.SCRIPT_ID }}", \"rootDir\": \"$(pwd)\" }"" > .clasp.json
 
       - name: deploy
         run: npm run deploy
