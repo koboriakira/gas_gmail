@@ -35,16 +35,16 @@ jobs:
 
       - name: Create clasprc.json
         run: |
-          echo '{"token": {}, "oauth2ClientSettings": {}}' > tmp1.json
+          echo '{"token": {}, "oauth2ClientSettings": {}, "isLocalCreds": false}' > tmp1.json
           jq '.token += {"access_token": "${{ env.CLASP_ACCESS_TOKEN }}"}' tmp1.json > tmp2.json
-          jq '.token += {"scope": "${{ env.SCOPE }}"}' tmp2.json > tmp3.json
-          jq '.token += {"token_type": "Bearer"}' tmp3.json > tmp4.json
-          jq '.token += {"id_token": "${{ env.CLASP_ID_TOKEN }}"}' tmp4.json > tmp5.json
-          jq '.token += {"expiry_date": "${{ env.EXPIRY_DATE }}"}' tmp5.json > tmp6.json
-          jq '.oauth2ClientSettings += {"clientId": "${{ env.CLASP_CLIENT_ID }}"}' tmp6.json > tmp7.json
-          jq '.oauth2ClientSettings += {"clientSecret": "${{ env.CLASP_CLIENT_SECRET }}"}' tmp7.json > tmp8.json
-          jq '.oauth2ClientSettings += {"redirectUri": "http://localhost"}' tmp8.json > tmp9.json
-          jq '.oauth2ClientSettings += {"isLocalCreds": false}' tmp9.json > tmp10.json
+          jq '.token += {"refresh_token": "${{ env.CLASP_REFRESH_TOKEN }}"}' tmp2.json > tmp3.json
+          jq '.token += {"scope": "${{ env.SCOPE }}"}' tmp3.json > tmp4.json
+          jq '.token += {"token_type": "Bearer"}' tmp4.json > tmp5.json
+          jq '.token += {"id_token": "${{ env.CLASP_ID_TOKEN }}"}' tmp5.json > tmp6.json
+          jq '.token += {"expiry_date": "${{ env.EXPIRY_DATE }}"}' tmp6.json > tmp7.json
+          jq '.oauth2ClientSettings += {"clientId": "${{ env.CLASP_CLIENT_ID }}"}' tmp7.json > tmp8.json
+          jq '.oauth2ClientSettings += {"clientSecret": "${{ env.CLASP_CLIENT_SECRET }}"}' tmp8.json > tmp9.json
+          jq '.oauth2ClientSettings += {"redirectUri": "http://localhost"}' tmp9.json > tmp10.json
           cat tmp10.json > ~/.clasprc.json
 
       - name: Create clasp.json
