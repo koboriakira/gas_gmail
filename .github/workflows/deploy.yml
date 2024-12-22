@@ -62,4 +62,4 @@ jobs:
 
       - name: Push
         run: |
-          npm run push -f
+          npm run push-force

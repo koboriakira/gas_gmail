@@ -7,6 +7,7 @@
   "scripts": {
     "build": "node esbuild.mjs",
     "push": "clasp push",
+    "push-force": "clasp push --force",
     "open": "clasp open",
     "deploy": "npm run build && npm run push",
     "login": "clasp login"
