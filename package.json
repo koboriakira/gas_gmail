@@ -8,7 +8,8 @@
     "build": "node esbuild.mjs",
     "push": "clasp push",
     "open": "clasp open",
-    "deploy": "npm run build && npm run push"
+    "deploy": "npm run build && npm run push",
+    "login": "clasp login"
   },
   "keywords": [],
   "author": "",
