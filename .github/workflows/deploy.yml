@@ -23,6 +23,7 @@ jobs:
       CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
       CLASP_ID_TOKEN: ${{ secrets.CLASP_ID_TOKEN }}
       CLASP_REFRESH_TOKEN: ${{ secrets.CLASP_REFRESH_TOKEN }}
+      GAS_SCRIPT_ID: ${{ secrets.GAS_SCRIPT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +35,26 @@ jobs:
 
       - name: Create clasprc.json
         run: |
-          echo \{\"token\":\{\"access_token\":\"${{ env.CLASP_ACCESS_TOKEN }}\",\"scope\":\"${{ env.SCOPE }}",\"token_type\":\"Bearer\",\"id_token\":\"${{ env.CLASP_ID_TOKEN }}\",\"expiry_date\":${{ env.EXPIRY_DATE }},\"refresh_token\":\"${{ env.CLASP_REFRESH_TOKEN }}\"\},\"oauth2ClientSettings\":\{\"clientId\":\"${{ env.CLASP_CLIENT_ID }}\",\"clientSecret\":\"${{ env.CLASP_CLIENT_SECRET }}\",\"redirectUri\":\"http://localhost\"\},\"isLocalCreds\":false\} > ~/.clasprc.json
+          echo '{"token": {}, "oauth2ClientSettings": {}, "isLocalCreds": false}' > tmp1.json
+          jq '.token += {"access_token": "${{ env.CLASP_ACCESS_TOKEN }}"}' tmp1.json > tmp2.json
+          jq '.token += {"refresh_token": "${{ env.CLASP_REFRESH_TOKEN }}"}' tmp2.json > tmp3.json
+          jq '.token += {"scope": "${{ env.SCOPE }}"}' tmp3.json > tmp4.json
+          jq '.token += {"token_type": "Bearer"}' tmp4.json > tmp5.json
+          jq '.token += {"id_token": "${{ env.CLASP_ID_TOKEN }}"}' tmp5.json > tmp6.json
+          jq '.token += {"expiry_date": "${{ env.EXPIRY_DATE }}"}' tmp6.json > tmp7.json
+          jq '.oauth2ClientSettings += {"clientId": "${{ env.CLASP_CLIENT_ID }}"}' tmp7.json > tmp8.json
+          jq '.oauth2ClientSettings += {"clientSecret": "${{ env.CLASP_CLIENT_SECRET }}"}' tmp8.json > tmp9.json
+          jq '.oauth2ClientSettings += {"redirectUri": "http://localhost"}' tmp9.json > tmp10.json
+          cat tmp10.json > ~/.clasprc.json
+
+      - name: Create clasp.json
+        env:
+          PWD: ${{ github.workspace }}
+        run: |
+          echo '{}' > clasp1.json
+          jq '. + {"scriptId": "${{ env.GAS_SCRIPT_ID }}"}' clasp1.json > clasp2.json
+          jq '. + {"rootDir": "${{ env.PWD }}"}' clasp2.json > clasp3.json
+          cat clasp3.json > ~/.clasp.json
 
       - name: Build
         run: |
@@ -42,4 +62,4 @@ jobs:
 
       - name: Push
         run: |
-          npm run push
+          npm run push-force

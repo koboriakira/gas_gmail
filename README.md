@@ -1,5 +1,16 @@
 # gas-gmail
 
-## デプロイ
+## 準備
 
-`npm run login`で出力された`~/.clasprc.json`の値をGitHub Actionsのsecretsとして登録しておく。
+### `~/.clasprc.json`の作成
+
+`npm run login`で出力される。
+
+### `.clasp.json`の作成
+
+```json
+{
+  "scriptId": "GASのプロジェクトID",
+  "rootDir": "このリポジトリのディレクトリ"
+}
+```
