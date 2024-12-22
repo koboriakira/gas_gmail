@@ -23,6 +23,7 @@ jobs:
       CLASP_CLIENT_SECRET: ${{ secrets.CLASP_CLIENT_SECRET }}
       CLASP_ID_TOKEN: ${{ secrets.CLASP_ID_TOKEN }}
       CLASP_REFRESH_TOKEN: ${{ secrets.CLASP_REFRESH_TOKEN }}
+      GAS_SCRIPT_ID: ${{ secrets.GAS_SCRIPT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +46,15 @@ jobs:
           jq '.oauth2ClientSettings += {"redirectUri": "http://localhost"}' tmp8.json > tmp9.json
           jq '.oauth2ClientSettings += {"isLocalCreds": false}' tmp9.json > tmp10.json
           cat tmp10.json > ~/.clasprc.json
+
+      - name: Create clasp.json
+        env:
+          PWD: ${{ github.workspace }}
+        run: |
+          echo '{}' > clasp1.json
+          jq '. + {"scriptId": "${{ env.GAS_SCRIPT_ID }}"}' clasp1.json > clasp2.json
+          jq '. + {"rootDir": "${{ env.PWD }}"}' clasp2.json > clasp3.json
+          cat clasp3.json > ~/.clasp.json
 
       - name: Build
         run: |
